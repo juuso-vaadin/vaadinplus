@@ -13,7 +13,7 @@ public class InputGroup extends Layout {
         setFlexDirection(FlexDirection.ROW);
 
         for (Component component : components) {
-            component.addClassNames(LumoUtility.MinWidth.NONE);
+            component.addClassName(LumoUtility.MinWidth.NONE);
         }
     }
 

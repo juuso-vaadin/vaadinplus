@@ -2,9 +2,12 @@ package com.example.application.components;
 
 import com.example.application.utilities.FontSize;
 import com.example.application.utilities.FontWeight;
+import com.example.application.utilities.Gap;
 import com.example.application.utilities.HeadingLevel;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 public class GridHeader extends Header {
@@ -12,6 +15,11 @@ public class GridHeader extends Header {
     private String title;
     private Component[] defaultActions;
     private Component[] contextActions;
+    private Component[] gridActions;
+
+    private Integer itemCount;
+
+    private Span items;
     private Grid grid;
 
     public GridHeader(String title) {
@@ -67,10 +75,25 @@ public class GridHeader extends Header {
             }
     }
 
+    public void setGridActions(Component... components) {
+        this.gridActions = components;
+        this.actions.addClassNames(LumoUtility.AlignItems.CENTER);
+        updateActions();
+    }
+
+    private void setGridActionsVisible(boolean visible) {
+        if (this.gridActions != null)
+            for (Component gridAction : this.gridActions) {
+                gridAction.setVisible(visible);
+            }
+    }
+
+
     private void updateActions() {
         this.actions.removeAll();
         addActions(this.defaultActions);
         addActions(this.contextActions);
+        addActions(this.gridActions);
         updateActionsVisibility(grid.getSelectedItems().size());
     }
 
@@ -82,6 +105,7 @@ public class GridHeader extends Header {
             removeClassNames(LumoUtility.Background.PRIMARY_10);
             setDefaultActionsVisible(true);
             setContextActionsVisible(false);
+            setItemCountVisible(true);
         } else {
             setHeading(size + " items selected");
             setHeadingFontSize(FontSize.MEDIUM);
@@ -89,6 +113,26 @@ public class GridHeader extends Header {
             addClassNames(LumoUtility.Background.PRIMARY_10);
             setDefaultActionsVisible(false);
             setContextActionsVisible(true);
+            setItemCountVisible(false);
+        }
+    }
+
+    public void setItemCount(Integer itemCount) {
+        items = new Span();
+        items.addClassName(LumoUtility.TextColor.SECONDARY);
+        if (itemCount != null) {
+            items.setText(itemCount.toString());
+        }
+        this.setDetails(items);
+        this.getColumnLayout().setFlexDirection(FlexDirection.ROW);
+        this.getColumnLayout().addClassName(LumoUtility.AlignItems.BASELINE);
+    }
+
+    public void setItemCountVisible(Boolean visible) {
+        if (visible) {
+            items.setVisible(true);
+        } else {
+            items.setVisible(false);
         }
     }
 
